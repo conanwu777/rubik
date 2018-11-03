@@ -1,6 +1,7 @@
 # include "Display.hpp"
 
 bool Display::spin = 1;
+bool Display::go = 1;
 bool Display::rot = 0;
 string Display::waitlist;
 float Display::angle;
@@ -201,10 +202,18 @@ void	Display::loop()
 	glUseProgram(shaders);
 	glBindVertexArray(vao);
 	if (rot)
-		rotate();
+	{
+		if (go)
+			rotate();
+	}
 	else if (waitlist[0])
 	{
-		if (waitlist[0] == 'F' || waitlist[0] == 'R' || waitlist[0] == 'U' ||
+		if (waitlist[0] == '+')
+		{
+			go = 0;
+			waitlist = waitlist.substr(1);
+		}
+		else if (waitlist[0] == 'F' || waitlist[0] == 'R' || waitlist[0] == 'U' ||
 			waitlist[0] == 'B' || waitlist[0] == 'L' || waitlist[0] == 'D')
 		{
 			face = waitlist[0];
@@ -289,6 +298,8 @@ void	Display::processinput(GLFWwindow *window, int k, int s, int a, int m)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 		spin = !spin;
+	if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS)
+		go = !go;
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 	if (!rot && (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS

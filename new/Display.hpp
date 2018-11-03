@@ -62,6 +62,7 @@ class Display {
 
 		float	g_v[16] = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -2.8, -6, 1};
 		static bool	spin;
+		static bool go;
 		float	theta = 0;
 		float	rotx = 0.5;
 		float	rotz = 0;

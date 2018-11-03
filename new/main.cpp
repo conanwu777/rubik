@@ -5,6 +5,33 @@
 
 Cube cube;
 
+void printExplanation(int phase)
+{
+	cout << YELLO << "Now doing phase " << phase << " :" << endl;
+	switch (phase){
+		case 1:
+			cout << WHITE << "First, make sure all edge pieces are correctly oriented" << endl;
+			cout << "\ti.e. it takes even number of moves to bring each edge to it's goal position\n";
+			cout << ORANGE << "Target subgroup : <F2, B2, L, R, U, D>\n";
+			break ;
+		case 2:
+			cout << WHITE << "Now we make sure all top and bottom colors are in the top and bottom face\n";
+			cout << "\ti.e. middle level will only contain edge pieces belonging to the middle\n";
+			cout << ORANGE << "Target subgroup : <F2, B2, L2, R2, U, D>\n";
+			break ;
+		case 3:
+			cout << WHITE << "Then we make sure all faces only have its own color or color of the opposite side\n";
+			cout << "\tin addition, overall number of swapped edge pieces must be even\n";
+			cout << "\tand coner pieces must be either in place or swapped in specific pairs\n";
+			cout << ORANGE << "Target subgroup : <F2, B2, L2, R2, U2, D2>\n";
+			break ;
+		default:
+			cout << WHITE << "Finally, we solve the remaining with only half-turns!\n";
+			cout << ORANGE << "Target subgroup : {I}\n";
+			break ;
+	}
+}
+
 string translate(string path)
 {
 	string ret;
@@ -21,6 +48,25 @@ string translate(string path)
 			ret += path[i];
 	}
 	return ret;
+}
+
+string mergeExtras(string moves){
+	char prev = 0;
+	int num = 0;
+	string out = "";
+	for (int i = 0; i < moves.size(); i+=2){
+		if (moves[i] == prev){
+			num = (num + moves[i + 1] - '0') % 4;
+			out = out.substr(0,out.size() - 2);
+		}
+		else{
+			prev =moves[i];
+			num = moves[i + 1] - '0';
+		}
+		out += moves[i];
+		out += (num + '0');
+	}
+	return out;
 }
 
 void shuffle(int ac, char **av)
@@ -48,7 +94,7 @@ void shuffle(int ac, char **av)
 	cout << GREEN << "Cube shuffle complete!\n";
 }
 
-void hashSolve(Cube *solverCube, Solver *s, string *output)
+void hashSolve(Cube *solverCube, Solver *s, string *output, Display *display)
 {
 	char	face;
 	int		num;
@@ -56,6 +102,8 @@ void hashSolve(Cube *solverCube, Solver *s, string *output)
 	Cube 	c;
 	for (int phase = 1; phase <= 4; phase++)
 	{
+		printExplanation(phase);
+		cout << YELLO << "Phase moves: " << endl;
 		while (s->getPhaseId(*solverCube, phase) != s->phaseGoal[phase])
 		{
 			string path = phaseHash[s->getPhaseId(*solverCube, phase)];
@@ -64,17 +112,16 @@ void hashSolve(Cube *solverCube, Solver *s, string *output)
 				cout << RED << "Solution not found" << endl;
 				exit(1);				
 			}
-			cout << YELLO << "Phase " << phase << " completed: " << endl;
 			cout << WHITE << '\t' << translate(path) << endl;
 			if (path[0] != 'E')
 			{
+				display->waitlist.append(path + '+');
 				output->append(path);
 				while (!path.empty())
 				{
 					face = path[0];
 					num = path[1] - '0';
 					solverCube->rotCube(face, num);
-					cout << "id: " << s->getPhaseId(*solverCube, phase) << endl;
 					path = path.substr(2);
 				}
 			}
@@ -85,16 +132,18 @@ void hashSolve(Cube *solverCube, Solver *s, string *output)
 	}
 }
 
-void bfsSolve(Cube *solverCube, Solver *s, string *output)
+void bfsSolve(Cube *solverCube, Solver *s, string *output, Display *display)
 {
 	for (int phase = 1; phase <= 4; phase++)
 	{
+		printExplanation(phase);
 		int i = 0;
 		queue<Cube> queue;
 		queue.push(*solverCube);
 		*solverCube = s->BFS(0, queue);
 		solverCube->getColor();
 		output->append(solverCube->path);
+		display->waitlist.append(solverCube->path + '+');
 		cout << YELLO << "Phase " << phase << " completed: " << endl;
 		cout << WHITE << '\t' << translate(solverCube->path) << endl;
 		solverCube->path = "";
@@ -114,18 +163,17 @@ int main(int ac, char **av){
 		solverCube = cube;
 		Solver s(solverCube);
 		if (ac == 3 && !strcmp(av[2], "-r"))
-			bfsSolve(&solverCube, &s, &output);
+			bfsSolve(&solverCube, &s, &output, &display);
 		else
-			hashSolve(&solverCube, &s, &output);
+			hashSolve(&solverCube, &s, &output, &display);
 		chrono::milliseconds time
 		= chrono::duration_cast<chrono::milliseconds>
 		(std::chrono::system_clock::now().time_since_epoch()) - startTime;
 		cout << GREEN << "Final output:" << endl;
-		cout << WHITE << translate(output) << endl;
-		cout << GREEN << "Total steps: " << WHITE << output.size() / 2 << endl;
+		cout << WHITE << translate(mergeExtras(output)) << endl;
+		cout << GREEN << "Total steps: " << WHITE << mergeExtras(output).size() / 2 << endl;
 		cout << GREEN << "Time to find solution: " << WHITE
 		<< static_cast<float>(time.count()) / 1000 << " seconds\n";
-		display.waitlist.append(output);
 	}
 	while (!glfwWindowShouldClose(display.window))
 		display.loop();
