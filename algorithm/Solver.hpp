@@ -16,6 +16,8 @@
 class Solver
 {
 	public:
+		std::chrono::milliseconds startTime;
+		std::chrono::milliseconds time;
 		bool allowedMoves[18];
 		unordered_set<int64_t> ids;
 		unordered_set<int> middleSlice = {fr, fl, bl, br};

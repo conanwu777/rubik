@@ -34,7 +34,7 @@ class Cube{
 		void	rotRight(int);
 		void	rotFront(int);
 		void	rotBack(int);
-		void	print();
+		void	getColor();
 };
 
 #endif

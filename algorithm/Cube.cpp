@@ -241,7 +241,7 @@ char	Cube::edgeFace(edge e, int offset)
 	return (edgeNames[ePos[e]][(offset + eOri[e]) % 2]);
 }
 
-void	Cube::print()
+void	Cube::getColor()
 {
 	int pos = 0;
 	color[pos++] = cornerFace(ulb, 0);
@@ -304,37 +304,4 @@ void	Cube::print()
 	color[pos++] = cornerFace(ulb, 1);
 	color[pos++] = edgeFace(ul, 1);
 	color[pos++] = cornerFace(ufl, 2);
-
-	int i = 0;
-	cout << "Front face\n";
-	cout << cornerFace(ufl, 1) << edgeFace(uf, 1) << cornerFace(urf, 2) << endl;
-	cout << edgeFace(fl, 0) << 'F' << edgeFace(fr, 0) << endl;
-	cout << cornerFace(dlf, 2) << edgeFace(df, 1) << cornerFace(dfr, 1) << endl;
-
-	cout << "\nRight face\n";
-	cout << cornerFace(urf, 1) << edgeFace(ur, 1) << cornerFace(ubr, 2) << endl;
-	cout << edgeFace(fr, 1) << 'R' << edgeFace(br, 1) << endl;
-	cout << cornerFace(dfr, 2) << edgeFace(dr, 1) << cornerFace(drb, 1) << endl;
-
-	cout << "\nLeft face\n";
-	cout << cornerFace(ulb, 1) << edgeFace(ul, 1) << cornerFace(ufl, 2) << endl;
-	cout << edgeFace(bl, 1) << 'L' << edgeFace(fl, 1) << endl;
-	cout << cornerFace(dbl, 2) << edgeFace(dl, 1) << cornerFace(dlf, 1) << endl;
-
-	cout << "\nUp face\n";
-	cout << cornerFace(ulb, 0) << edgeFace(ub, 0) << cornerFace(ubr, 0) << endl;
-	cout << edgeFace(ul, 0) << 'U' << edgeFace(ur, 0) << endl;
-	cout << cornerFace(ufl, 0) << edgeFace(uf, 0) << cornerFace(urf, 0) << endl;
-
-	cout << "\nDown face\n";
-	cout << cornerFace(dbl, 0) << edgeFace(db, 0) << cornerFace(drb, 0) << endl;
-	cout << edgeFace(dl, 0) << 'D' << edgeFace(dr, 0) << endl;
-	cout << cornerFace(dlf, 0) << edgeFace(df, 0) << cornerFace(dfr, 0) << endl;
-
-	cout << "\nBehind face\n";
-	cout << cornerFace(ulb, 2) << edgeFace(ub, 1) << cornerFace(ubr, 1) << endl;
-	cout << edgeFace(bl, 0) << 'B' << edgeFace(br, 0) << endl;
-	cout << cornerFace(dbl, 1) << edgeFace(db, 1) << cornerFace(drb, 2) << endl;
-
-	cout << endl << endl;
 }

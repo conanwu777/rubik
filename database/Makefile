@@ -1,4 +1,4 @@
-NAME = Table
+NAME = Rubik
 SRC = *.cpp
 OBJ = $(SRC:.cpp=.o)
 FRAMEWORKS = -framework OpenGl -w

@@ -60,10 +60,10 @@ class Display {
 		unsigned int	proj;
 		unsigned int	shaders;
 
-		float	g_v[16] = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, -8, 1};
+		float	g_v[16] = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -2.8, -6, 1};
 		static bool	spin;
 		float	theta = 0;
-		float	rotx = 0;
+		float	rotx = 0.5;
 		float	rotz = 0;
 
 		static bool rot;
@@ -86,8 +86,6 @@ class Display {
 		void	keyholds(GLFWwindow *window);
 		void	rotate();
 		static void	processinput(GLFWwindow *window, int k, int s, int a, int m);
-
-
 };
 
 char		*filetostr(char *filename);

@@ -222,7 +222,6 @@ void	Display::loop()
 				fixed = 1;
 			else if (face == 'F' || face == 'B')
 				fixed = 2;
-			cout << waitlist << endl;
 		}
 	}
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -266,7 +265,7 @@ void	Display::rotate(){
 	if (angle >= PI / 2)
 	{
 		cube.rotCube(face, 1);
-		cube.print();
+		cube.getColor();
 		updateCubeColor();
 		if (num > 1)
 		{
@@ -335,12 +334,12 @@ void	Display::keyholds(GLFWwindow *window)
 		g_v[14] += 0.1;
 	if (glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS)
 		g_v[14] -= 0.1;
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_KP_8) == GLFW_PRESS)
 		rotx -= 0.02;
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_KP_5) == GLFW_PRESS)
 		rotx += 0.02;
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_KP_6) == GLFW_PRESS)
 		rotz -= 0.02;
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_KP_4) == GLFW_PRESS)
 		rotz += 0.02;
 }
