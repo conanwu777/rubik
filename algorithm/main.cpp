@@ -1,52 +1,12 @@
 #include "Cube.hpp"
 #include "Solver.hpp"
+#include "Display.hpp"
+#include "Rubik.hpp"
 
-int64_t getCornerHash(Cube c)
-{
-	int64_t hash = 0;
-	for (int i = 0; i < 8; i++){
-		hash <<= 3;
-		hash += c.cPos[i];
-	}
-	for (int i = 0; i < 8; i++){
-		hash <<= 2;
-		hash += c.cOri[i];
-	}
-	return hash;
-}
-
-int64_t	getTopHash(Cube c)
-{
-	int64_t hash = 0;
-	for (int i = 0; i < 6; i++){
-		hash <<= 3;
-		hash += c.ePos[i];
-	}
-	for (int i = 0; i < 6; i++){
-		hash <<= 2;
-		hash += c.eOri[i];
-	}
-	return hash;
-}
-
-int64_t	getBotHash(Cube c)
-{
-	int64_t hash = 0;
-	for (int i = 6; i < 12; i++){
-		hash <<= 3;
-		hash += c.ePos[i];
-	}
-	for (int i = 6; i < 12; i++){
-		hash <<= 2;
-		hash += c.eOri[i];
-	}
-	return hash;
-}
+Cube cube;
 
 int main(int ac, char **av){
-
-	Cube cube;
-
+	Cube solverCube;
 	if (ac < 2){
 		cout << RED << "Cube not shuffled.\n";
 	}
@@ -63,19 +23,21 @@ int main(int ac, char **av){
 				cube.rotCube(av[1][i], num);
 			}
 	cube.print();
+	solverCube = cube;
 	cout << GREEN << "Cube shuffle complete!\n";
-	Solver s(cube);
+	Display display;
+	Solver s(solverCube);
 
-	if (s.corners[getCornerHash(cube)] == 0 && s.botEdges[getBotHash(cube)] == 0
-		&& s.topEdges[getTopHash(cube)] == 0)
-	{
-		cout << ORANGE << "Cube not shuffled...\n";
-		return 0;
+	for (int phase = 1; phase <= 4; phase++){
+		int i = 0;
+		queue<Cube> queue;
+		queue.push(solverCube);
+		solverCube = s.BFS(0, queue);
+		cout << "path: " << solverCube.path << endl;
 	}
-	int i = 0;
-	while (!s.DFS(cube, 0, i))
-	{
-		cout << "WOW - " << i << endl;
-		i++;
-	}
+	solverCube.print();
+	display.waitlist.append(solverCube.path);
+	// display.waitlist.append("U1");
+	while (!glfwWindowShouldClose(display.window))
+		display.loop();
 }
