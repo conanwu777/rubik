@@ -12,7 +12,7 @@ Solver::Solver(Cube c) {
 		allowedMoves[i] = 1;
 	for (int i = 1 ; i <= 4; i++)
 		phaseGoal[i] = getPhaseId(tmp, i);
-	readData("../database/phase1");
+	readData("./database/phase1");
 }
 
 void	Solver::readData(std::string file)
@@ -37,23 +37,21 @@ void Solver::nextPhase(){
 			allowedMoves[2] = 0;
 			allowedMoves[9] = 0;
 			allowedMoves[11] = 0;
-			readData("../database/phase2");
+			readData("./database/phase2");
 			break;
 		case 2:
-			// RL
 			allowedMoves[3] = 0;
 			allowedMoves[5] = 0;
 			allowedMoves[12] = 0;
 			allowedMoves[14] = 0;
-			readData("../database/phase3");
+			readData("./database/phase3");
 			break;
 		case 3:
-			// UD
 			allowedMoves[6] = 0;
 			allowedMoves[8] = 0;
 			allowedMoves[15] = 0;
 			allowedMoves[17] = 0;
-			readData("../database/phase4");
+			readData("./database/phase4");
 	}
 	phase++;
 }

@@ -60,11 +60,16 @@ string mergeExtras(string moves){
 			out = out.substr(0,out.size() - 2);
 		}
 		else{
-			prev =moves[i];
+			prev = moves[i];
 			num = moves[i + 1] - '0';
 		}
-		out += moves[i];
-		out += (num + '0');
+		if (num != 0){
+			out += moves[i];
+			out += (num + '0');
+		}
+		else{
+			prev = 0;
+		}
 	}
 	return out;
 }
