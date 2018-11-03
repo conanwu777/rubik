@@ -19,7 +19,7 @@ class Solver
 		bool allowedMoves[18];
 		unordered_set<int64_t> ids;
 		unordered_set<int> middleSlice = {fr, fl, bl, br};
-		int phaseGoal[5];
+		int64_t phaseGoal[5];
 		int size;
 		PTR st;
 		PTR end;

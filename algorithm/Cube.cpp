@@ -119,10 +119,10 @@ void	Cube::rotLeft(int amount){
 		cPos[dbl] = tmp;
 
 		char tOri = cOri[dlf];
-		cOri[dlf] = (2 + cOri[ufl]) % 3;
-		cOri[ufl] = (1 + cOri[ulb]) % 3;
-		cOri[ulb] = (2 + cOri[dbl]) % 3;
-		cOri[dbl] = (1 + tOri) % 3;
+		cOri[dlf] = (1 + cOri[ufl]) % 3;
+		cOri[ufl] = (2 + cOri[ulb]) % 3;
+		cOri[ulb] = (1 + cOri[dbl]) % 3;
+		cOri[dbl] = (2 + tOri) % 3;
 
 		tOri = eOri[bl];
 		eOri[bl] = eOri[dl];
@@ -150,10 +150,10 @@ void	Cube::rotRight(int amount){
 		cPos[ubr] = tmp;
 
 		char tOri = cOri[urf];
-		cOri[urf] = (2 + cOri[dfr]) % 3;
-		cOri[dfr] = (1 + cOri[drb]) % 3;
-		cOri[drb] = (2 + cOri[ubr]) % 3;
-		cOri[ubr] = (1 + tOri) % 3;
+		cOri[urf] = (1 + cOri[dfr]) % 3;
+		cOri[dfr] = (2 + cOri[drb]) % 3;
+		cOri[drb] = (1 + cOri[ubr]) % 3;
+		cOri[ubr] = (2 + tOri) % 3;
 
 		tOri = eOri[fr];
 		eOri[fr] = eOri[dr];

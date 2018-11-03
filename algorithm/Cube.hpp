@@ -15,7 +15,7 @@ class Cube{
 		char	cornerFace(corner c, int offset);
 		char	edgeFace(edge e, int offset);
 	public:
-		corner cPos[8] = {ufl, urf, ubr, ulb, dbl, dlf, dfr, drb};
+		corner cPos[8] = {urf, ubr, dlf, dfr, ulb, ufl, drb, dbl};
 		char cOri[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 		edge ePos[12] = {uf, ur, ub, ul, df, dr, db, dl, fr, br, bl, fl};
 		char eOri[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};

@@ -111,8 +111,8 @@ int64_t Solver::getPhaseId(Cube c, int phase){
 				id++;
 		}
 		id <<= 1;
-		for( int i=0; i<8; i++ )
-			for( int j=i+1; j<8; j++ )
+		for (int i = 0; i < 8; i++ )
+			for( int j = i + 1; j < 8; j++ )
 		id ^= c.cPos[i] > c.cPos[j];
 	}
 	else if (phase == 4){
