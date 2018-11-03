@@ -22,5 +22,5 @@ int main(){
 		solverCube.path = "";
 		ofs.close();
 	}
-	cout << GREEN << "Final output:" << endl;
+	cout << GREEN << "Database files saved!" << endl;
 }

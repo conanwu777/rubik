@@ -20,6 +20,17 @@ Cube& Cube::operator=(const Cube& a){
 	return *this;
 }
 
+bool Cube::operator==(const Cube& a){
+	for (int i = 0; i < 8; i++)
+		if (cPos[i] != a.cPos[i] || cOri[i] != a.cOri[i])
+			return 0;
+	for (int i = 0; i < 12; i++)
+		if (ePos[i] != a.ePos[i] || eOri[i] != a.eOri[i])
+			return 0;
+	return 1;
+}
+
+
 Cube::~Cube(){
 }
 

@@ -196,7 +196,7 @@ void	Display::loop()
 	keyholds(window);
 	getmatrix();
 	glUniformMatrix4fv(proj, 1, GL_FALSE, prod);
-	glClearColor(0.06f, 0.09f, 0.15f, 1.0f);
+	glClearColor(0.20f, 0.23f, 0.30f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glUseProgram(shaders);
 	glBindVertexArray(vao);

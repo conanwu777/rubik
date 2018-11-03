@@ -8,8 +8,6 @@ int phase = 1;
 Solver::Solver(Cube c) {
 	Cube tmp;
 
-	startTime = std::chrono::duration_cast<std::chrono::milliseconds>
-	(std::chrono::system_clock::now().time_since_epoch());
 	for (int i = 0; i < 18; i++)
 		allowedMoves[i] = 1;
 	for (int i = 1 ; i <= 4; i++)
@@ -20,19 +18,15 @@ Solver::Solver(Cube c) {
 void	Solver::readData(std::string file)
 {
 	ifstream input(file);
+	if (input.fail())
+	{
+		cout << RED << "File " << file << " not found >.<" << endl;
+		exit(1);
+	}
 	int64_t hash;
 	string moves;
 	while (input >> hash >> moves)
 		phaseHash[hash] = moves;
-}
-
-int		max(int64_t a, int64_t b, int64_t c){
-	int64_t num = a;
-	if (num < b)
-		num = b;
-	if (num < c)
-		num = c;
-	return num;
 }
 
 void Solver::nextPhase(){
@@ -64,79 +58,144 @@ void Solver::nextPhase(){
 	phase++;
 }
 
-int64_t Solver::getPhaseId(Cube c, int phase){
-	int64_t id = 0;
-	string faces = "FRUBLD";
-	if (phase == 1){
-		for (int i = 0; i < 12; i++)
-		{
-			id <<= 1;
-			id += c.eOri[i];
-		}
-	}
-	else if (phase == 2){
-		for (int i = 0; i < 8; i++)
-		{
-			id <<= 2;
-			id += c.cOri[i];
-		}
-		for (int i = 0; i < 12; i++){
-			id <<= 1;
-			if (c.ePos[i] < 8)
-				id++;
-		}
-	}
-	else if (phase == 3){
-		for (int i = 0; i < 8; i++){
-			for (int j = 0; j < 3; j++){
-				id <<= 1;
-				char t = c.cornerNames[c.cPos[i]][(c.cOri[i] + j) % 3];
-				if (!(t == c.cornerNames[i][j] ||
-					t == faces[(faces.find(c.cornerNames[i][j]) + 3) % 6])){
-					id++;
-				}
-			}			
-		}
-		for (int i = 0; i < 12; i++){
-			for (int j = 0; j < 2; j++){
-				id <<= 1;
-				char t = c.edgeNames[c.ePos[i]][(c.eOri[i] + j) % 2];
-				if (!(t == c.edgeNames[i][j] ||
-					t == faces[(faces.find(c.edgeNames[i][j]) + 3) % 6])){
-					id++;
-				}
-			}			
-		}
-		for (int i = 0; i < 8; i++)
-		{
-			id <<= 1;
-			if (c.cPos[i] != i && c.cPos[i] != (i + 4) % 8)
-				id++;
-		}
+int64_t	Solver::idPhase1(Cube c){
+	int64_t id = 0; 
+	for (int i = 0; i < 12; i++)
+	{
 		id <<= 1;
-		for (int i = 0; i < 8; i++ )
-			for( int j = i + 1; j < 8; j++ )
-		id ^= c.cPos[i] > c.cPos[j];
-	}
-	else if (phase == 4){
-		for (int i = 0; i < 8; i++){
-			for (int j = 0; j < 3; j++){
-				id <<= 1;
-				char t = c.cornerNames[c.cPos[i]][(c.cOri[i] + j) % 3];
-				if (t == faces[(faces.find(c.cornerNames[i][j]) + 3) % 6]){
-					id++;
-				}
-			}			
-		}
-		for (int i = 0; i < 12; i++){
-			for (int j = 0; j < 2; j++){
-				id <<= 1;
-				char t = c.edgeNames[c.ePos[i]][(c.eOri[i] + j) % 2];
-				if (t == faces[(faces.find(c.edgeNames[i][j]) + 3) % 6]){
-					id++;
-				}
-			}			
-		}
+		id += c.eOri[i];
 	}
 	return id;
+}
+
+int64_t	Solver::idPhase2(Cube c){
+	int64_t id = 0; 
+	for (int i = 0; i < 8; i++)
+	{
+		id <<= 2;
+		id += c.cOri[i];
+	}
+	for (int i = 0; i < 12; i++){
+		id <<= 2;
+		if (c.ePos[i] < 8)
+			id++;
+	}
+	return id;
+}
+
+int64_t	Solver::idPhase3(Cube c){
+	string faces = "FRUBLD";
+
+	int64_t id = 0; 
+	for (int i = 0; i < 7; i++){
+		for (int j = 0; j < 3; j++){
+			id <<= 1;
+			char t = c.cornerNames[c.cPos[i]][(c.cOri[i] + j) % 3];
+			if (!(t == c.cornerNames[i][j] ||
+				t == faces[(faces.find(c.cornerNames[i][j]) + 3) % 6]))
+				id++;
+		}			
+	}
+	for (int i = 0; i < 11; i++){
+		for (int j = 0; j < 2; j++){
+			id <<= 1;
+			char t = c.edgeNames[c.ePos[i]][(c.eOri[i] + j) % 2];
+			if (!(t == c.edgeNames[i][j] ||
+				t == faces[(faces.find(c.edgeNames[i][j]) + 3) % 6]))
+				id++;
+		}			
+	}
+	for (int i = 0; i < 8; i++)
+	{
+		id <<= 1;
+		if (c.cPos[i] % 4 != i % 4)
+			id++;
+	}
+	id <<= 1;
+	for (int i = 0; i < 8; i++ )
+		for( int j = i + 1; j < 8; j++ )
+			id ^= c.cPos[i] > c.cPos[j];
+	return id;
+}
+
+int64_t	Solver::idPhase4(Cube c){
+	string faces = "FRUBLD";
+	
+	int64_t id = 0; 
+	for (int i = 0; i < 8; i++){
+		for (int j = 0; j < 3; j++){
+			id <<= 1;
+			char t = c.cornerNames[c.cPos[i]][(c.cOri[i] + j) % 3];
+			if (t == faces[(faces.find(c.cornerNames[i][j]) + 3) % 6])
+				id++;
+		}			
+	}
+	for (int i = 0; i < 12; i++){
+		for (int j = 0; j < 2; j++){
+			id <<= 1;
+			char t = c.edgeNames[c.ePos[i]][(c.eOri[i] + j) % 2];
+			if (t == faces[(faces.find(c.edgeNames[i][j]) + 3) % 6])
+				id++;
+		}			
+	}
+	return id;
+}
+
+int64_t Solver::getPhaseId(Cube c, int phase)
+{
+	int64_t id = 0;
+	
+	id = (*this.*(idPhase[phase - 1]))(c);
+	return id;
+}
+
+Cube	Solver::BFS(int step, queue<Cube> level)
+{
+	if (step == 0){
+		ids.clear();
+		int64_t num = getPhaseId(level.front(), phase);
+		if (num == phaseGoal[phase]){
+			nextPhase();
+			return level.front();
+		}
+	}
+	queue<Cube> next;
+	Cube cur;
+	while (!level.empty()){
+		cur = level.front();
+		level.pop();
+		int count = 0;
+		for (int move = 0; move < 6; move++)
+		{
+			for (int amount = 0; amount < 3; amount++)
+			{
+				cur.rotCube(moves[move], 1);
+				int64_t id;
+				if (allowedMoves[count] == 1){
+					id = getPhaseId(cur, phase);
+					if (ids.find(id) == ids.end())
+					{
+						cur.path += moves[move];
+						cur.path += (amount + '1');
+						if (id == phaseGoal[phase])
+						{
+							nextPhase();
+							return cur;
+						}
+						ids.insert(id);
+						next.push(cur);
+						cur.path = cur.path.substr(0, cur.path.length() - 2);
+					}
+				}
+				count++;
+			}
+			cur.rotCube(moves[move], 1);
+		}
+	}
+	if (next.empty())
+	{
+		cout << RED << "Solution not found\n";
+		exit(0);
+	}
+	return BFS(step + 1, next);
 }

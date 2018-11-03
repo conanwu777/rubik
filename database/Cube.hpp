@@ -27,6 +27,7 @@ class Cube{
 		Cube();
 		~Cube();
 		Cube& 	operator=(const Cube& a);
+		bool	operator==(const Cube& a);
 		void	rotCube(char c, int num);
 		void	rotUp(int);
 		void	rotDown(int);
