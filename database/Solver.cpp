@@ -4,8 +4,6 @@
 Solver::Solver(Cube c) {
 	Cube tmp;
 
-	startTime = std::chrono::duration_cast<std::chrono::milliseconds>
-	(std::chrono::system_clock::now().time_since_epoch());
 	for (int i = 0; i < 18; i++)
 		allowedMoves[i] = 1;
 	for (int i = 1 ; i <= 4; i++)
@@ -141,7 +139,7 @@ int64_t Solver::getPhaseId(Cube c, int phase){
 Cube	Solver::BFS(int step, queue<Cube> level){
 	if (step == 0){
 		int64_t id = getPhaseId(level.front(), phase);
-		ofs << id << " " << level.front().path << endl;
+		ofs << id << " " << "E" << endl;
 		phaseHash[phase][id] = level.front().path;
 	}
 
@@ -162,12 +160,12 @@ Cube	Solver::BFS(int step, queue<Cube> level){
 					id = getPhaseId(cur, phase);
 					if (phaseHash[phase].find(id) == phaseHash[phase].end())
 					{
-						cur.path += moves[move];
-						cur.path += (amount + '1');
+						cur.path.insert(cur.path.begin(), '3' - amount);
+						cur.path.insert(cur.path.begin(),  moves[move]);
 						ofs << id << " " << cur.path << endl;
 						phaseHash[phase][id] = cur.path;
 						next.push(cur);
-						cur.path = cur.path.substr(0, cur.path.length() - 2);
+						cur.path = cur.path.substr(2);
 					}
 				}
 				count++;
@@ -180,8 +178,6 @@ Cube	Solver::BFS(int step, queue<Cube> level){
 		nextPhase();
 		return cur;
 	}
-	time = std::chrono::duration_cast<std::chrono::milliseconds>
-	(std::chrono::system_clock::now().time_since_epoch()) - startTime;
 	return BFS(step + 1, next);
 }
 

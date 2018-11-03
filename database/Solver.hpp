@@ -12,12 +12,9 @@
 # define PTR std::shared_ptr<Cube>
 # define MPTR(y) std::make_shared<Cube>(y)
 
-
 class Solver
 {
 	public:
-		std::chrono::milliseconds startTime;
-		std::chrono::milliseconds time;
 		bool allowedMoves[18];
 		unordered_set<int> middleSlice = {fr, fl, bl, br};
 		int64_t phaseGoal[5];

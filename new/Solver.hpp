@@ -19,7 +19,6 @@ class Solver
 		std::chrono::milliseconds startTime;
 		std::chrono::milliseconds time;
 		bool allowedMoves[18];
-		unordered_set<int64_t> ids;
 		unordered_set<int> middleSlice = {fr, fl, bl, br};
 		int64_t phaseGoal[5];
 		int size;
@@ -31,7 +30,7 @@ class Solver
 		int64_t 	getPhaseId(Cube c, int phase);
 		void	nextPhase();
 		Solver(Cube c);
-		void	readData(std::string file, unordered_map<int64_t, int> &map);
+		void	readData(std::string file);
 		void	printBoard(PTR b);
 };
 

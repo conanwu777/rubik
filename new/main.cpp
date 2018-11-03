@@ -55,9 +55,14 @@ int main(int ac, char **av){
 			int i = 0;
 
 			string path = phaseHash[s.getPhaseId(solverCube, phase)];
-			while (path)
+			cout << path << endl;
+			if (path[0] != 'E')
+				output.append(path);
+			while (!path.empty() && path[0] != 'E')
 			{
-
+				face = path[0];
+				num = path[1] - '0';
+				solverCube.rotCube(face, num);
 				path = path.substr(2);
 			}
 			s.nextPhase();
@@ -67,6 +72,7 @@ int main(int ac, char **av){
 		cout << GREEN << "Total steps: " << WHITE << output.size() / 2 << endl;
 		cout << GREEN << "Time to find solution: " << WHITE
 		<< static_cast<float>(s.time.count()) / 1000 << " seconds\n";
+		display.waitlist.append(output);
 	}
 	while (!glfwWindowShouldClose(display.window))
 		display.loop();

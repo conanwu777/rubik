@@ -2,6 +2,8 @@
 #include <fstream>
 
 map<int64_t, string> phaseHash;
+char moves[6] = {'F','R','U','B','L','D'};
+int phase = 1;
 
 Solver::Solver(Cube c) {
 	Cube tmp;
@@ -12,21 +14,17 @@ Solver::Solver(Cube c) {
 		allowedMoves[i] = 1;
 	for (int i = 1 ; i <= 4; i++)
 		phaseGoal[i] = getPhaseId(tmp, i);
-	readData("../database/phase1", phaseHash);
+	readData("../database/phase1");
 }
 
-void	Solver::readData(std::string file,
-	unordered_map<int64_t, string> &map)
+void	Solver::readData(std::string file)
 {
 	ifstream input(file);
 	int64_t hash;
 	string moves;
-	while (input >> hash >> moves){
-		map[hash] = moves;
-	}
+	while (input >> hash >> moves)
+		phaseHash[hash] = moves;
 }
-
-char moves[6] = {'F','R','U','B','L','D'};
 
 int		max(int64_t a, int64_t b, int64_t c){
 	int64_t num = a;
@@ -37,8 +35,6 @@ int		max(int64_t a, int64_t b, int64_t c){
 	return num;
 }
 
-int phase = 1;
-
 void Solver::nextPhase(){
 	phaseHash.clear();
 	switch (phase){
@@ -47,7 +43,7 @@ void Solver::nextPhase(){
 			allowedMoves[2] = 0;
 			allowedMoves[9] = 0;
 			allowedMoves[11] = 0;
-			readData("../database/phase2", phaseHash);
+			readData("../database/phase2");
 			break;
 		case 2:
 			// RL
@@ -55,7 +51,7 @@ void Solver::nextPhase(){
 			allowedMoves[5] = 0;
 			allowedMoves[12] = 0;
 			allowedMoves[14] = 0;
-			readData("../database/phase3", phaseHash);
+			readData("../database/phase3");
 			break;
 		case 3:
 			// UD
@@ -63,7 +59,7 @@ void Solver::nextPhase(){
 			allowedMoves[8] = 0;
 			allowedMoves[15] = 0;
 			allowedMoves[17] = 0;
-			readData("../database/phase4", phaseHash);
+			readData("../database/phase4");
 	}
 	phase++;
 }
