@@ -111,7 +111,7 @@ void hashSolve(Cube *solverCube, Solver *s, string *output, Display *display)
 		cout << YELLO << "Phase moves: " << endl;
 		while (s->getPhaseId(*solverCube, phase) != s->phaseGoal[phase])
 		{
-			string path = phaseHash[s->getPhaseId(*solverCube, phase)];
+			string path = phaseHash[phase -1][s->getPhaseId(*solverCube, phase)];
 			if (path == "")
 			{
 				cout << RED << "Solution not found" << endl;

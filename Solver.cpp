@@ -1,21 +1,12 @@
 #include "Solver.hpp"
 #include <fstream>
+#include <thread>
 
-map<int64_t, string> phaseHash;
+map<int64_t, string> phaseHash[4];
 char moves[6] = {'F','R','U','B','L','D'};
 int phase = 1;
 
-Solver::Solver(Cube c) {
-	Cube tmp;
-
-	for (int i = 0; i < 18; i++)
-		allowedMoves[i] = 1;
-	for (int i = 1 ; i <= 4; i++)
-		phaseGoal[i] = getPhaseId(tmp, i);
-	readData("./database/phase1");
-}
-
-void	Solver::readData(std::string file)
+void	readData(std::string file, int phase)
 {
 	ifstream input(file);
 	if (input.fail())
@@ -26,32 +17,45 @@ void	Solver::readData(std::string file)
 	int64_t hash;
 	string moves;
 	while (input >> hash >> moves)
-		phaseHash[hash] = moves;
+		phaseHash[phase - 1][hash] = moves;
+}
+
+Solver::Solver(Cube c) {
+	Cube tmp;
+
+	for (int i = 0; i < 18; i++)
+		allowedMoves[i] = 1;
+	for (int i = 1 ; i <= 4; i++)
+		phaseGoal[i] = getPhaseId(tmp, i);
+	thread th1(readData, "./database/phase1", 1);
+	thread th2(readData, "./database/phase2", 2);
+	thread th3(readData, "./database/phase3", 3);
+	thread th4(readData, "./database/phase4", 4);
+	th1.join();
+	th2.join();
+	th3.join();
+	th4.join();
 }
 
 void Solver::nextPhase(){
-	phaseHash.clear();
 	switch (phase){
 		case 1:
 			allowedMoves[0] = 0;
 			allowedMoves[2] = 0;
 			allowedMoves[9] = 0;
 			allowedMoves[11] = 0;
-			readData("./database/phase2");
 			break;
 		case 2:
 			allowedMoves[3] = 0;
 			allowedMoves[5] = 0;
 			allowedMoves[12] = 0;
 			allowedMoves[14] = 0;
-			readData("./database/phase3");
 			break;
 		case 3:
 			allowedMoves[6] = 0;
 			allowedMoves[8] = 0;
 			allowedMoves[15] = 0;
 			allowedMoves[17] = 0;
-			readData("./database/phase4");
 	}
 	phase++;
 }

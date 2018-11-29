@@ -17,6 +17,6 @@ void	mult(float *a, float *b, float *p);
 
 class Cube;
 extern Cube cube;
-extern std::map<int64_t, std::string> phaseHash;
+extern std::map<int64_t, std::string> phaseHash[4];
 
 #endif

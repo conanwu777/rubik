@@ -34,7 +34,7 @@ class Solver
 		int64_t 	getPhaseId(Cube c, int phase);
 		void	nextPhase();
 		Solver(Cube c);
-		void	readData(std::string file);
+		// void	readData(std::string file);
 		void	printBoard(PTR b);
 };
 
