@@ -236,7 +236,7 @@ void	Display::loop()
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, 6 * nv * sizeof(float),
 		out, GL_STATIC_DRAW);
-	glDrawArrays(GL_TRIANGLES, 0, nv * 3);
+	glDrawArrays(GL_TRIANGLES, 0, nv);
 	glfwSwapBuffers(window);
 	glfwPollEvents();
 	if (spin)
